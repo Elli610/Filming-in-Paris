@@ -139,12 +139,12 @@ parametres du form :
             $maxRows = $_POST['rows'];
         }
         else{
-            $maxRows = 10;
+            $maxRows = 200;
         }
         $newUrl .= '&rows='.$maxRows;
     }
     else{
-        $maxRows = 10;
+        $maxRows = 200;
     }
     // add geo_point_2d
     $newUrl .= '&geo_point_2d';
@@ -227,12 +227,13 @@ parametres du form :
     
                             echo "<th>".$response['records'][$i]['fields']['annee_tournage']."</th>";
                             echo "<th>".$response['records'][$i]['fields']['nom_tournage']."</th>";
-                            try{
+                            if(isset(['records'][$i]['fields']['nom_realisateur'])){
                                 echo "<th>".$response['records'][$i]['fields']['nom_realisateur']."</th>";
                             }
-                            catch(Exception $e){
-                                echo "<th>Non renseigné</th>";
+                            else{
+                                echo "<th></th>";
                             }
+
                             echo "<th>".$response['records'][$i]['fields']['nom_producteur']."</th>";
                             echo "<th>".substr($response['records'][$i]['fields']['ardt_lieu'], -2, 3)."</th>";
                             echo "<th>".$response['records'][$i]['fields']['adresse_lieu']."</th>";
