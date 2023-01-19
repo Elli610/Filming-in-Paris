@@ -150,7 +150,9 @@ parametres du form :
     $newUrl .= '&geo_point_2d';
     // add facet
     $newUrl .= '&facet=annee_tournage&facet=type_tournage&facet=nom_tournage&facet=nom_realisateur&facet=nom_producteur&facet=ardt_lieu&facet=date_debut&facet=date_fin';
-
+    echo "URL : ".$newUrl;
+    echo "<br>";
+    echo "url : https://opendata.paris.fr/api/records/1.0/search/?dataset=lieux-de-tournage-a-paris&q=annee_tournage%253D2019%2524%26producteur%253DArnaud&facet=annee_tournage&facet=type_tournage&facet=nom_tournage&facet=nom_realisateur&facet=nom_producteur&facet=ardt_lieu&facet=date_debut&facet=date_fin";
 ?>
 
 <!DOCTYPE html>
@@ -215,35 +217,76 @@ parametres du form :
                     // echo $result;
                     echo "Correspondances : ".sizeof($response['records']);
                     echo "<br>";
-                    if($response['records'] == []){
+                    if(isset($response['records']) && $response['records'] == []){
                         echo "<p>Aucun tournage correspondant à votre recherche n'a été trouvé</p>";
                     }
-                    else{
+                    elseif(isset($response['records']) && $response['records'] != []){
                         echo "<tr><th>Année</th><th>Titre</th><th>Réalisateur</th><th>Producteur</th><th>Arrondissement</th><th>Adresse</th><th>Id du lieu</th><th>Date de début</th><th>Date de fin</th></tr>";
                         echo"Url : <a href='".$newUrl."' target='_blank'>".$newUrl."</a>";
                         $i = 0;
                         while ($i < $maxRows && $i < sizeof($response['records']) ){ //$response['records'] && $response['records'][$i] && $response['records'][$i]['fields'] && $response['records'][$i]['fields']['annee_tournage']){
                             echo "<tr>";
-    
-                            echo "<th>".$response['records'][$i]['fields']['annee_tournage']."</th>";
-                            echo "<th>".$response['records'][$i]['fields']['nom_tournage']."</th>";
-                            if(isset(['records'][$i]['fields']['nom_realisateur'])){
+                            if(isset($response['records'][$i]['fields']['annee_tournage'])){
+                                echo "<th>".$response['records'][$i]['fields']['annee_tournage']."</th>";
+                            }
+                            else{
+                                echo "<th></th>";
+                            }
+                            if(isset($response['records'][$i]['fields']['nom_tournage'])){
+                                echo "<th>".$response['records'][$i]['fields']['nom_tournage']."</th>";
+                            }
+                            else{
+                                echo "<th></th>";
+                            }
+                            if(isset($response['records'][$i]['fields']['nom_realisateur'])){
                                 echo "<th>".$response['records'][$i]['fields']['nom_realisateur']."</th>";
                             }
                             else{
                                 echo "<th></th>";
                             }
+                            if(isset($response['records'][$i]['fields']['nom_producteur'])){
+                                echo "<th>".$response['records'][$i]['fields']['nom_producteur']."</th>";
+                            }
+                            else{
+                                echo "<th></th>";
+                            }
+                            if(isset($response['records'][$i]['fields']['ardt_lieu'])){
+                                echo "<th>".substr($response['records'][$i]['fields']['ardt_lieu'], -2, 3)."</th>";
+                            }
+                            else{
+                                echo "<th></th>";
+                            }
+                            if(isset($response['records'][$i]['fields']['adresse_lieu'])){
+                                echo "<th>".$response['records'][$i]['fields']['adresse_lieu']."</th>";
+                            }
+                            else{
+                                echo "<th></th>";
+                            }
+                            if(isset($response['records'][$i]['fields']['id_lieu'])){
+                                echo "<th>".$response['records'][$i]['fields']['id_lieu']."</th>";
+                            }
+                            else{
+                                echo "<th></th>";
+                            }
+                            if(isset($response['records'][$i]['fields']['date_debut'])){
+                                echo "<th>".$response['records'][$i]['fields']['date_debut']."</th>";
+                            }
+                            else{
+                                echo "<th></th>";
+                            }
+                            if(isset($response['records'][$i]['fields']['date_fin'])){
+                                echo "<th>".$response['records'][$i]['fields']['date_fin']."</th>";
+                            }
+                            else{
+                                echo "<th></th>";
+                            }
 
-                            echo "<th>".$response['records'][$i]['fields']['nom_producteur']."</th>";
-                            echo "<th>".substr($response['records'][$i]['fields']['ardt_lieu'], -2, 3)."</th>";
-                            echo "<th>".$response['records'][$i]['fields']['adresse_lieu']."</th>";
-                            echo "<th>".$response['records'][$i]['fields']['id_lieu']."</th>";
-                            echo "<th>".$response['records'][$i]['fields']['date_debut']."</th>";
-                            echo "<th>".$response['records'][$i]['fields']['date_fin']."</th>";
-    
                             echo "</tr>";
                             $i++;
                         }
+                    }
+                    else{
+                        echo "<p>Erreur lors de la recherche. Veuillez réessayer</p>";
                     }
 
                 }
