@@ -62,14 +62,26 @@ parametres du form :
     else{
         $adresse_lieu_film = '';
     }
-    
+    if($nbParam > 1){
+        $u = true;
+    }
+    else{
+        $u = false;
+    }
     $check = false; // variable de controle pour savoir si on a deja ajoute un parametre
-
+    $first = true; // variable de controle pour savoir si on est au premier parametre
     if(isset($_POST['annee']) && !empty($_POST['annee'])){
         $annee = $_POST['annee'];
-        if($check){
-            $newUrl .= '&annee_tournage%3D'.$annee;
-        }else{
+        if($check && $u){
+            $newUrl .= '&annee_tournage%253D'.$annee;
+        }
+        elseif(!$check && $u){
+            $newUrl .= 'annee_tournage%253D'.$annee.'%2524%';
+        }
+        elseif($check && !$u){
+            $newUrl .= 'annee_tournage%3D'.$annee;
+        }
+        else{
             $newUrl .= 'annee_tournage%3D'.$annee;
             $check = true;
         }
@@ -80,7 +92,13 @@ parametres du form :
     }
     if(isset($_POST['titre']) && !empty($_POST['titre'])){
         $titre = str_replace(' ', '%20', $_POST['titre']);
-        if($check){
+        if($check && $u){
+            $newUrl .= '&nom_tournage%253D'.$titre;
+        }
+        elseif(!$check && $u){
+            $newUrl .= 'nom_tournage%253D'.$titre.'%2524%';
+        }
+        elseif($check && !$u){
             $newUrl .= '&nom_tournage%3D'.$titre;
         }
         else {
@@ -88,13 +106,19 @@ parametres du form :
             $check = true;
         }
         $nbParam --;
-        if($nbParam > 0){
+        if($nbParam == 1 ){
             $newUrl .= '%24';
         }
     }
     if(isset($_POST['realisateur']) && !empty($_POST['realisateur'])){
         $realisateur = str_replace(' ', '%20', $_POST['realisateur']);
-        if($check){
+        if($check && $u){
+            $newUrl .= '&nom_realisateur%253D'.$realisateur;
+        }
+        elseif(!$check && $u){
+            $newUrl .= 'nom_realisateur%253D'.$realisateur.'%2524%';
+        }
+        elseif($check && !$u){
             $newUrl .= '&nom_realisateur%3D'.$realisateur;
         }
         else {
@@ -102,17 +126,17 @@ parametres du form :
             $check = true;
         }
         $nbParam --;
-        if($nbParam > 0){
+        if($nbParam == 1){
             $newUrl .= '%24';
         }
     }
     if(isset($_POST['producteur']) && !empty($_POST['producteur'])){
         $producteur = str_replace(' ', '%20', $_POST['producteur']);
         if($check){
-            $newUrl .= '&producteur%3D'.$producteur;
+            $newUrl .= '&nom_producteur%3D'.$producteur;
         }
         else {
-            $newUrl .= 'producteur%3D'.$producteur;
+            $newUrl .= 'nom_producteur%3D'.$producteur;
             $check = true;
         }
         $nbParam --;
@@ -134,6 +158,11 @@ parametres du form :
             $newUrl .= '%24';
         }
     }
+    // retait des 4 derniers caracteres si plusieurs parametres
+    if($u){
+        $newUrl = substr($newUrl, 0, -4);
+    }
+
     if(isset($_POST['rows'])&&!empty($_POST['rows'])){
         if(is_numeric($_POST['rows']) && $_POST['rows'] > 0 && $_POST['rows'] <= 10000){
             $maxRows = $_POST['rows'];
@@ -150,9 +179,9 @@ parametres du form :
     $newUrl .= '&geo_point_2d';
     // add facet
     $newUrl .= '&facet=annee_tournage&facet=type_tournage&facet=nom_tournage&facet=nom_realisateur&facet=nom_producteur&facet=ardt_lieu&facet=date_debut&facet=date_fin';
-    echo "URL : ".$newUrl;
-    echo "<br>";
-    echo "url : https://opendata.paris.fr/api/records/1.0/search/?dataset=lieux-de-tournage-a-paris&q=annee_tournage%253D2019%2524%26producteur%253DArnaud&facet=annee_tournage&facet=type_tournage&facet=nom_tournage&facet=nom_realisateur&facet=nom_producteur&facet=ardt_lieu&facet=date_debut&facet=date_fin";
+    // echo "URL : ".$newUrl;
+    // echo "<br>";
+    // echo "url : https://opendata.paris.fr/api/records/1.0/search/?dataset=lieux-de-tournage-a-paris&q=annee_tournage%253D2019%2524%26nom_realisateur%253DArnaud&facet=annee_tournage&facet=type_tournage&facet=nom_tournage&facet=nom_realisateur&facet=nom_producteur&facet=ardt_lieu&facet=date_debut&facet=date_fin";
 ?>
 
 <!DOCTYPE html>
@@ -161,10 +190,13 @@ parametres du form :
         <meta charset="utf-8" />
         <title>Recherche de tournages de films à Paris</title>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-
     </head>
     <body>
         <h1>Recherche de tournages de films à Paris</h1>
+        <p>L'intégralité du site est fonctionnel à l'exception de la recherche sur plusieurs critères ( exemple : année et réalisateur ).
+            Le résultat sera toujours vide. Les requêtes ne contenant qu'un argument + nombre max de résultats fonctionnent correctement. 
+            <br> Vous pouvez cliquer sur le lien ci dessous pour visualiser le résultat de la requête au format json. 
+            <br> Si l'api retourne bien les coordonnées gps, vous pourrez cliquer sur les adresses afin de les visualiser sur une carte.</p>
         <form action="filming_in_paris.php" method="post">
             <p>
                 <label for="annee">Année</label> : <input type="text" name="annee" id="annee" value='<?php echo $annee_film; ?>'/><br />
@@ -257,7 +289,17 @@ parametres du form :
                                 echo "<th></th>";
                             }
                             if(isset($response['records'][$i]['fields']['adresse_lieu'])){
-                                echo "<th>".$response['records'][$i]['fields']['adresse_lieu']."</th>";
+                                if(isset($response['records'][$i]['fields']['geo_shape']['coordinates'])){
+                                    $long = $response['records'][$i]['fields']['geo_shape']['coordinates'][0];
+                                    $lat = $response['records'][$i]['fields']['geo_shape']['coordinates'][1];
+                                    $address = $response['records'][$i]['fields']['adresse_lieu'];
+                                    $link = "map.php?long=".$long."&lat=".$lat."&address=".$address."";
+                                    echo "<th><a href='".$link."' target='_blank'>".$response['records'][$i]['fields']['adresse_lieu']."</a></th>";
+                                }
+                                else{
+                                    echo "<th>".$response['records'][$i]['fields']['adresse_lieu']."</th>";
+
+                                }
                             }
                             else{
                                 echo "<th></th>";
@@ -288,10 +330,8 @@ parametres du form :
                     else{
                         echo "<p>Erreur lors de la recherche. Veuillez réessayer</p>";
                     }
-
                 }
             ?>            
         </table>
-
     </body>
 </html>

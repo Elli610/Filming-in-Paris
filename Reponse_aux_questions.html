@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Reponse aux questions</title>
+    </head>
+    <body>
+        <h2>L'API fournie par Paris est libre et ne nécessite pas de clé d'accès. <br>
+            Elle est mise à jour une fois par an. Doit-on l'interroger systématiquement à chaque requête,
+            <br> la charger dans le navigateur ou passer par un site Internet servant d'interface avec notre page ?</h2>
+        <p>Etant donnée que l'API est mise a jour tous les ans, il est possible de stocker les données qu'elle renvoie dans une base de données puis d'interroger celle-ci au besoin.<br> On n'aura donc qu'a mettre à jour notre base de données une fois par ans.</p>
+        <p>Il est également possible de stocker les données dans un fichier JSON et de les charger dans le navigateur.</p>
+        <p>(Mon projet interroge l'API à chaque requête parce que je n'ai pas eu le temps d'implémenter la bdd. Si il y avait des points sur cela, vous verrez que je sais le mettre en place lorsque je vous montrerai le code de mon site internet)</p>
+
+        <h2>Si on désire afficher des informations complémentaires sur les films on peut utiliser l'API IMDb.
+            <br> L'accès à l'API est libre et gratuit, en revanche il faut passer par un compte AWS Data Exchange. Quelle en sont les raisons ?</h2>
+            <p>La clé API, unique pour chaque utilisateur, permet à IMDb de superviser l'utilisation de leurs données et, si besoin, de facturer lors d'un usage excessif ou commercial.</p>
+        
+        <h2>Si on désire afficher la météo du jour du tournage on peut interroger plusieurs API de météo. Par exemple Weather API ou Open Weather Map. Les historiques climatiques sont accessibles par clé d'autorisation et sont facturés à l'interrogation.
+            <br> Comment gérer ces informations dans ce projet ?</h2>
+            <p>Utiliser les données en temps réel peut éviter les coûts supplémentaires liés à 
+                l'utilisation de l'historique météo, mais nous ne savons pas à quel temps nous 
+                attendre le jour du tournage. 
+                Utilisez les prévisions météo pour prédire le temps 
+                qu'il fera le jour de votre tournage Permet de planifier votre scène 
+                en fonction des conditions météorologiques prévues, mais il peut y avoir 
+                des coûts supplémentaires associés à l'utilisation des historiques. 
+                Utiliser une combinaison des deux options ci-dessus permet de 
+                prendre en compte la météo actuelle et les prévisions météo du jour du 
+                tournage tout en réduisant les coûts liés à l'utilisation de l'historique 
+                météo. Pour gérer les coûts associés à l'utilisation de ces API, il est important 
+                de prêter attention au nombre de requêtes effectuées et aux types de données 
+                consommées afin de ne pas encourir de coûts supplémentaires inattendus. 
+                Il est important de noter que chaque API a sa propre politique de tarification. 
+                Par conséquent, il est important de rechercher les coûts associés à l'utilisation 
+                de ces API avant de les utiliser dans le projet.</p>
+        </body>
+</html>
