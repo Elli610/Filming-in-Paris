@@ -197,6 +197,8 @@ parametres du form :
             Le résultat sera toujours vide. Les requêtes ne contenant qu'un argument + nombre max de résultats fonctionnent correctement. 
             <br> Vous pouvez cliquer sur le lien ci dessous pour visualiser le résultat de la requête au format json. 
             <br> Si l'api retourne bien les coordonnées gps, vous pourrez cliquer sur les adresses afin de les visualiser sur une carte.</p>
+            <p>La partie dans laquelle je génére l'url a été complexifiée lorsque j'ai essayé de prendre en charge plus d'un argument à la fois.
+                <br> Je n'ai pas réussis à le faire fonctionner mais je vous le laisse au cas ou cela vous intéresse.</p>
         <form action="filming_in_paris.php" method="post">
             <p>
                 <label for="annee">Année</label> : <input type="text" name="annee" id="annee" value='<?php echo $annee_film; ?>'/><br />
