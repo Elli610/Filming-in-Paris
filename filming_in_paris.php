@@ -248,7 +248,7 @@ parametres du form :
                 if(true){
                     $result = callAPI('GET', $newUrl, false);
                     $response = json_decode($result, true);
-                    // echo $result;
+                    // echo si elles sont dispos, toutes les infos de la requête
                     echo "Correspondances : ".sizeof($response['records']);
                     echo "<br>";
                     if(isset($response['records']) && $response['records'] == []){
@@ -290,7 +290,7 @@ parametres du form :
                             else{
                                 echo "<th></th>";
                             }
-                            if(isset($response['records'][$i]['fields']['adresse_lieu'])){
+                            if(isset($response['records'][$i]['fields']['adresse_lieu'])){ // setup du lien vers la map
                                 if(isset($response['records'][$i]['fields']['geo_shape']['coordinates'])){
                                     $long = $response['records'][$i]['fields']['geo_shape']['coordinates'][0];
                                     $lat = $response['records'][$i]['fields']['geo_shape']['coordinates'][1];
